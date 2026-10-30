@@ -3,161 +3,1271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Booking</title>
+    <title>GoPlan - Smart Hotel Booking & Stays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .hotel-card:hover {
-            transform: scale(1.02);
-            transition: transform 0.2s ease-in-out;
+        :root {
+            --bg-dark: #060d0a;
+            --bg-card: rgba(15, 28, 22, 0.78);
+            --bg-card-hover: rgba(20, 38, 30, 0.9);
+            --border-glass: rgba(134, 239, 172, 0.16);
+            --border-glass-strong: rgba(16, 185, 129, 0.38);
+            --green-primary: #10b981;
+            --green-hover: #059669;
+            --green-accent: #34d399;
+            --green-glow: rgba(16, 185, 129, 0.35);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-darker: #64748b;
+            --gold: #f59e0b;
+            --purple: #8b5cf6;
         }
-        .search-form {
-            margin-top: -3rem;
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #06080d;
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(30, 58, 138, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Navigation Bar */
+        .goplan-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(6, 13, 10, 0.85);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 0.85rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-leaf {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px var(--green-glow);
+        }
+
+        .brand-logo span {
+            color: var(--green-accent);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--green-accent);
+        }
+
+        .nav-cta-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 0.55rem 1.1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-cta-back:hover {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--green-primary);
+            color: #ffffff;
+        }
+
+        /* Container */
+        .page-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            width: 100%;
+        }
+
+        /* Hero Banner */
+        .hotel-hero {
             position: relative;
-            z-index: 10;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 13, 10, 0.95) 100%),
+                        url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1920') center/cover no-repeat;
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 2.8rem 2.5rem;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(134, 239, 172, 0.35);
+            color: #86efac;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            margin-bottom: 0.9rem;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            margin-bottom: 0.6rem;
+        }
+
+        .hero-title span {
+            color: var(--green-accent);
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            max-width: 650px;
+            line-height: 1.5;
+        }
+
+        .hero-meta-row {
+            display: flex;
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(6, 13, 10, 0.7);
+            border: 1px solid var(--border-glass);
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #e2e8f0;
+        }
+
+        /* Room Size Selector Section */
+        .room-size-control-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .section-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .room-tabs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .room-tab-btn {
+            background: rgba(10, 20, 16, 0.65);
+            border: 1.5px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--text-main);
+            position: relative;
+            text-decoration: none;
+            display: block;
+        }
+
+        .room-tab-btn:hover {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .room-tab-btn.is-active {
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 13, 10, 0.85) 100%);
+            border-color: var(--green-primary);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.25), inset 0 0 10px rgba(16, 185, 129, 0.1);
+        }
+
+        .room-tab-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+        }
+
+        .room-tab-title {
+            font-size: 1.02rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .room-tab-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #86efac;
+            border: 1px solid rgba(134, 239, 172, 0.3);
+        }
+
+        .room-tab-btn.is-active .room-tab-badge {
+            background: var(--green-primary);
+            color: #ffffff;
+            border-color: var(--green-primary);
+        }
+
+        .room-tab-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 0.45rem;
+        }
+
+        .room-tab-specs {
+            display: flex;
+            gap: 0.8rem;
+            font-size: 0.72rem;
+            color: #cbd5e1;
+        }
+
+        .room-tab-specs span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Filter Controls */
+        .filter-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.3fr auto;
+            gap: 1rem;
+            align-items: end;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .filter-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .filter-input,
+        .filter-select {
+            background: rgba(6, 13, 10, 0.8);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 0.65rem 0.9rem;
+            font-size: 0.85rem;
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s ease;
+            width: 100%;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: var(--green-primary);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .filter-select option {
+            background: #0b1712;
+            color: #ffffff;
+        }
+
+        .btn-filter-submit {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border: none;
+            padding: 0.7rem 1.4rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            height: 40px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px var(--green-glow);
+        }
+
+        .btn-filter-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Opaque Mystery Hotel Deal */
+        .mystery-deal-banner {
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.45) 0%, rgba(15, 23, 42, 0.85) 60%, rgba(6, 13, 10, 0.9) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 14px 34px rgba(88, 28, 135, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .mystery-deal-banner::before {
+            content: "\f023"; font-family: "Font Awesome 6 Free"; font-weight: 900;
+            position: absolute;
+            right: 20px;
+            bottom: -15px;
+            font-size: 8rem;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .mystery-left {
+            max-width: 650px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mystery-tag-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .mystery-badge-gold {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0f172a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .mystery-tag-sub {
+            font-size: 0.76rem;
+            color: #d8b4fe;
+            font-weight: 600;
+        }
+
+        .mystery-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
+        }
+
+        .mystery-desc {
+            font-size: 0.84rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+            margin-bottom: 0.85rem;
+        }
+
+        .mystery-amenities-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .mystery-chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.22rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            color: #f1f5f9;
+        }
+
+        .mystery-right-price {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            padding: 1.25rem 1.6rem;
+            text-align: right;
+            min-width: 210px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .mystery-strikethrough {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            text-decoration: line-through;
+            margin-bottom: 0.15rem;
+        }
+
+        .mystery-big-price {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #fbbf24;
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+        }
+
+        .mystery-savings-label {
+            font-size: 0.74rem;
+            color: #34d399;
+            font-weight: 700;
+            margin-bottom: 0.9rem;
+        }
+
+        .btn-unlock-mystery {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #0f172a;
+            padding: 0.65rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.84rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+        }
+
+        .btn-unlock-mystery:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.5);
+            background: #fbbf24;
+        }
+
+        /* Hotels Grid Header */
+        .hotels-grid-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .hotels-grid-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .active-room-indicator {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--green-accent);
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+        }
+
+        /* Hotel Cards Grid */
+        .hotels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .hotel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(14px);
+            position: relative;
+        }
+
+        .hotel-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-glass-strong);
+            background: var(--bg-card-hover);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .hotel-card.is-top-recommended {
+            border-color: var(--green-primary);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+        }
+
+        .hotel-img-wrap {
+            position: relative;
+            height: 190px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .hotel-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .hotel-card:hover .hotel-img {
+            transform: scale(1.04);
+        }
+
+        .hotel-badge-top {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(6, 13, 10, 0.85);
+            border: 1px solid rgba(134, 239, 172, 0.3);
+            backdrop-filter: blur(8px);
+            color: #86efac;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .hotel-card.is-top-recommended .hotel-badge-top {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .hotel-rating-pill {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(6, 13, 10, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #fbbf24;
+            padding: 0.25rem 0.65rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .hotel-body {
+            padding: 1.35rem 1.4rem 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hotel-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+        }
+
+        .hotel-address {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* Room Configuration Chip Inside Card */
+        .card-room-config {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 10px;
+            padding: 0.55rem 0.75rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .card-room-head {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #86efac;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.15rem;
+        }
+
+        .card-room-spec {
+            font-size: 0.71rem;
+            color: #cbd5e1;
+        }
+
+        .hotel-desc {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            line-height: 1.45;
+            margin-bottom: 0.85rem;
+        }
+
+        .hotel-amenities-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .amenity-chip {
+            font-size: 0.68rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        /* Dynamic Pricing Banner inside Card */
+        .card-dp-indicator {
+            font-size: 0.72rem;
+            padding: 0.45rem 0.65rem;
+            border-radius: 8px;
+            margin-bottom: 0.85rem;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fde68a;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .card-dp-discount {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #86efac;
+        }
+
+        /* Hotel Card Footer */
+        .hotel-footer {
+            padding: 1rem 1.4rem 1.25rem;
+            border-top: 1px solid var(--border-glass);
+            background: rgba(10, 20, 16, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .rate-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .rate-amount {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .rate-amount span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .rate-room-type {
+            font-size: 0.68rem;
+            color: var(--green-accent);
+            font-weight: 600;
+        }
+
+        .btn-reserve-hotel {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px var(--green-glow);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-reserve-hotel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
+            background: #10b981;
+        }
+
+        /* Cancellation Policy Card */
+        .cancellation-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 18px;
+            padding: 1.6rem 1.8rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(14px);
+        }
+
+        .canc-head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .canc-head i {
+            color: var(--green-accent);
+        }
+
+        .canc-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1.1rem;
+        }
+
+        .canc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.85rem;
+        }
+
+        .canc-tile {
+            background: rgba(6, 13, 10, 0.65);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 0.75rem 0.9rem;
+            text-align: center;
+        }
+
+        .canc-tile-time {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .canc-tile-refund {
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: #34d399;
+        }
+
+        /* Footer */
+        .goplan-footer {
+            border-top: 1px solid var(--border-glass);
+            background: rgba(6, 13, 10, 0.9);
+            padding: 1.8rem 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .room-tabs-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .canc-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .goplan-nav {
+                padding: 0.85rem 1rem;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .filter-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .hotels-grid {
+                grid-template-columns: 1fr;
+            }
+            .mystery-deal-banner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .mystery-right-price {
+                text-align: left;
+            }
+            .canc-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-title {
+                font-size: 1.7rem;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-100">
-    <!-- Hero Section -->
-    <div class="h-[500px] bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1920')">
-        <div class="absolute inset-0 bg-black bg-opacity-50">
-            <div class="container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-                    Find Your Perfect Stay
-                </h1>
-                <p class="text-xl text-white mb-8 max-w-2xl">
-                    Discover handpicked hotels with amazing views and exceptional service
-                </p>
+<body>
+
+    <!-- GoPlan Brand Navigation Bar -->
+    <header class="goplan-nav">
+        <a href="{% url 'trip_view' %}" class="brand-logo">
+            <div class="brand-leaf"><i class="fas fa-leaf" style="color: #34d399;"></i></div>
+            <div>Go<span>Plan</span></div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="{% url 'trip_view' %}">Home</a></li>
+            <li><a href="{% url 'trip_view' %}">Plan Trip</a></li>
+            <li><a href="{% url 'booking' %}" class="active">Hotels & Stays</a></li>
+            <li><a href="{% url 'trip_view' %}">Sustainable Travel</a></li>
+        </ul>
+
+        <a href="{% url 'trip_view' %}" class="nav-cta-back">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Trip Itinerary</span>
+        </a>
+    </header>
+
+    <main class="page-container">
+
+        <!-- Hero Section -->
+        <section class="hotel-hero">
+            <span class="hero-pill-badge">
+                <i class="fas fa-map-marker-alt"></i> Destination: {{ destination|default:"Jaipur, Rajasthan" }}
+            </span>
+            <h1 class="hero-title">
+                Smart Hotel Booking & <span>Real Room Deals</span>
+            </h1>
+            <p class="hero-subtitle">
+                Live accommodation search powered by genuine local hotel inventory. Pick your preferred room size to see authentic, verified nightly pricing.
+            </p>
+
+            <div class="hero-meta-row">
+                <div class="hero-meta-item">
+                    <i class="far fa-calendar-alt text-emerald-400"></i>
+                    <span>Check-in: <strong>{{ checkin|default:"2026-10-29" }}</strong></span>
+                </div>
+                <div class="hero-meta-item">
+                    <i class="far fa-calendar-check text-emerald-400"></i>
+                    <span>Check-out: <strong>{{ checkout|default:"2026-10-31" }}</strong></span>
+                </div>
+                <div class="hero-meta-item">
+                    <i class="fas fa-user-friends text-emerald-400"></i>
+                    <span>Party: <strong>{{ guests }} Guest{{ guests|pluralize }}</strong></span>
+                </div>
+                <div class="hero-meta-item">
+                    <i class="fas fa-bed text-emerald-400"></i>
+                    <span>Active Size: <strong>{{ selected_room_config.label }}</strong></span>
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Search Form -->
-    <div class="search-form max-w-4xl mx-auto px-4">
-        <form method="GET" action="" class="bg-white p-6 rounded-lg shadow-lg">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="relative">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Check-in</label>
-                    <div class="relative">
-                        <input type="date" name="checkin" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <i class="fas fa-calendar absolute left-3 top-2.5 text-gray-400"></i>
+        <!-- Room Size Selector & Search Controls -->
+        <section class="room-size-control-box">
+            <div class="section-label">
+                <span>Select Room Size & Layout</span>
+                <span style="color: var(--green-accent);">Live Price Adjustment Active</span>
+            </div>
+
+            <!-- Room Size Tabs (1 Bed Room, 2 Bed Room, 3 Bed Room) -->
+            <div class="room-tabs-grid" id="room-tabs-container">
+                <!-- 1 Bed Room -->
+                <button type="button" class="room-tab-btn {% if room_type == '1_bed' %}is-active{% endif %}" onclick="selectRoomType('1_bed')" data-room-type="1_bed">
+                    <div class="room-tab-header">
+                        <span class="room-tab-title"><i class="fas fa-bed"></i> 1 Bed Room</span>
+                        <span class="room-tab-badge">Standard / Double</span>
                     </div>
-                </div>
-
-                <div class="relative">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Check-out</label>
-                    <div class="relative">
-                        <input type="date" name="checkout" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <i class="fas fa-calendar absolute left-3 top-2.5 text-gray-400"></i>
+                    <div class="room-tab-sub">1 King Bed • Up to 2 Guests</div>
+                    <div class="room-tab-specs">
+                        <span><i class="fas fa-ruler-combined"></i> 320 sq ft</span>
+                        <span><i class="fas fa-bath"></i> 1 En-suite</span>
                     </div>
-                </div>
+                </button>
 
-                <div class="relative">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Guests</label>
-                    <div class="relative">
-                        <select name="guests" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none">
-                            <option value="1">1 Guest</option>
-                            <option value="2">2 Guests</option>
-                            <option value="3">3 Guests</option>
-                            <option value="4">4+ Guests</option>
-                        </select>
-                        <i class="fas fa-users absolute left-3 top-2.5 text-gray-400"></i>
+                <!-- 2 Bed Room -->
+                <button type="button" class="room-tab-btn {% if room_type == '2_bed' %}is-active{% endif %}" onclick="selectRoomType('2_bed')" data-room-type="2_bed">
+                    <div class="room-tab-header">
+                        <span class="room-tab-title"><i class="fas fa-bed"></i><i class="fas fa-bed" style="margin-left: 2px;"></i> 2 Bed Room</span>
+                        <span class="room-tab-badge">Family / 2 BHK</span>
                     </div>
-                </div>
+                    <div class="room-tab-sub">2 King Beds • Up to 4 Guests</div>
+                    <div class="room-tab-specs">
+                        <span><i class="fas fa-ruler-combined"></i> 650 sq ft</span>
+                        <span><i class="fas fa-bath"></i> 2 Private Baths</span>
+                    </div>
+                </button>
 
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 h-[38px] mt-6">
-                    <i class="fas fa-search"></i>
-                    Search
+                <!-- 3 Bed Room -->
+                <button type="button" class="room-tab-btn {% if room_type == '3_bed' %}is-active{% endif %}" onclick="selectRoomType('3_bed')" data-room-type="3_bed">
+                    <div class="room-tab-header">
+                        <span class="room-tab-title"><i class="fas fa-bed"></i><i class="fas fa-bed" style="margin-left: 2px;"></i><i class="fas fa-bed" style="margin-left: 2px;"></i> 3 Bed Room</span>
+                        <span class="room-tab-badge">Presidential / 3 BHK</span>
+                    </div>
+                    <div class="room-tab-sub">3 Bedrooms • Up to 6+ Guests</div>
+                    <div class="room-tab-specs">
+                        <span><i class="fas fa-ruler-combined"></i> 1,150 sq ft</span>
+                        <span><i class="fas fa-couch"></i> Living & Dining</span>
+                    </div>
                 </button>
             </div>
-        </form>
-    </div>
 
-    <!-- Hotels Grid -->
-    <div class="container mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8">Featured Hotels</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="hotels-grid"></div>
-    </div>
+            <!-- Search & Filter Controls -->
+            <form method="GET" action="{% url 'booking' %}" id="hotel-filter-form">
+                <input type="hidden" name="room_type" id="form-room-type-input" value="{{ room_type }}">
 
-    <script>
-        const hotels = [
-            {
-                image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800",
-                name: "Luxury Ocean Resort",
-                rating: 4.8,
-                price: 299,
-                description: "Beachfront luxury resort with stunning ocean views and world-class amenities."
-            },
-            {
-                image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800",
-                name: "Mountain View Lodge",
-                rating: 4.6,
-                price: 199,
-                description: "Cozy mountain retreat with spectacular views and outdoor activities."
-            },
-            {
-                image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800",
-                name: "Urban Boutique Hotel",
-                rating: 4.7,
-                price: 249,
-                description: "Stylish downtown hotel with modern amenities and city skyline views."
-            }
-        ];
+                <div class="filter-form-grid">
+                    <div class="filter-group">
+                        <label class="filter-label" for="checkin-input">Check-in Date</label>
+                        <input type="date" name="checkin" id="checkin-input" value="{{ checkin }}" class="filter-input">
+                    </div>
 
-        function createHotelCard(hotel) {
-            return `
-                <div class="hotel-card bg-white rounded-xl shadow-lg overflow-hidden">
-                    <img src="${hotel.image}" alt="${hotel.name}" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-semibold text-gray-900">${hotel.name}</h3>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="ml-1 text-gray-700">${hotel.rating}</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4">${hotel.description}</p>
-                        <div class="flex gap-4 mb-4">
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-wifi mr-1"></i>
-                                <span class="text-sm">Free WiFi</span>
-                            </div>
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-coffee mr-1"></i>
-                                <span class="text-sm">Breakfast</span>
-                            </div>
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-parking mr-1"></i>
-                                <span class="text-sm">Parking</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="text-2xl font-bold text-gray-900">Rs.${hotel.price}<span class="text-sm font-normal text-gray-600">/night</span></div>
-                            <a href="{% url 'forming' %}" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center block">
-                                Book Now
-                            </a>
-                        </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="checkout-input">Check-out Date</label>
+                        <input type="date" name="checkout" id="checkout-input" value="{{ checkout }}" class="filter-input">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="priority-select">Ranking Priority</label>
+                        <select name="hotel_priority" id="priority-select" class="filter-select">
+                            <option value="price" {% if selected_priority == 'price' %}selected{% endif %}><i class="fas fa-wallet"></i> Best Price & Value</option>
+                            <option value="rating" {% if selected_priority == 'rating' %}selected{% endif %}><i class="fas fa-star"></i> Highest Guest Rating</option>
+                            <option value="amenities" {% if selected_priority == 'amenities' %}selected{% endif %}><i class="fas fa-gem"></i> Luxury Amenities</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-filter-submit">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Apply Filters</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 1. OPAQUE SELLING: Mystery Hotel Deal Card -->
+        {% if mystery_deal %}
+            <section class="mystery-deal-banner">
+                <div class="mystery-left">
+                    <div class="mystery-tag-row">
+                        <span class="mystery-badge-gold">
+                            <i class="fas fa-bolt" style="color: #f59e0b; margin-right: 4px;"></i>Mystery Deal (Save {{ mystery_deal.savings_pct }}%)
+                        </span>
+                        <span class="mystery-tag-sub">Opaque Inventory Allocation</span>
+                    </div>
+                    <h3 class="mystery-title">{{ mystery_deal.opaque_title }}</h3>
+                    <p class="mystery-desc">
+                        Blind-booking guarantee: You receive a verified {{ mystery_deal.star_rating }} Star property with premium amenities. The exact hotel name is unlocked right after confirmation!
+                    </p>
+                    <div class="mystery-amenities-row">
+                        {% for am in mystery_deal.amenities %}
+                            <span class="mystery-chip">
+                                <i class="fas fa-check" style="color: #34d399; margin-right: 3px;"></i>{{ am }}
+                            </span>
+                        {% endfor %}
                     </div>
                 </div>
-            `;
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const hotelsGrid = document.getElementById('hotels-grid');
-            hotels.forEach(hotel => {
-                hotelsGrid.innerHTML += createHotelCard(hotel);
+                <div class="mystery-right-price">
+                    <div class="mystery-strikethrough">Regular Rs. {{ mystery_deal.regular_price }}</div>
+                    <div class="mystery-big-price">Rs. {{ mystery_deal.discounted_price }}</div>
+                    <div class="mystery-savings-label">You save Rs. {{ mystery_deal.savings }}</div>
+                    <a href="{% url 'forming' %}?is_mystery=1" class="btn-unlock-mystery">
+                        Unlock Secret Deal →
+                    </a>
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- Real Hotels Grid -->
+        <section>
+            <div class="hotels-grid-head">
+                <div class="hotels-grid-title">
+                    <span><i class="fas fa-hotel" style="color: #38bdf8;"></i></span>
+                    <span>Real Hotels in {{ destination|default:"Destination" }}</span>
+                </div>
+                <div class="active-room-indicator" id="active-room-label-indicator">
+                    Showing {{ selected_room_config.label }} Rates
+                </div>
+            </div>
+
+            <div class="hotels-grid">
+                {% for hotel in hotels %}
+                    <article class="hotel-card {% if forloop.first %}is-top-recommended{% endif %}"
+                             data-price-1bed="{{ hotel.prices_by_room.1_bed|default:hotel.price }}"
+                             data-price-2bed="{{ hotel.prices_by_room.2_bed|default:hotel.price }}"
+                             data-price-3bed="{{ hotel.prices_by_room.3_bed|default:hotel.price }}"
+                             data-hotel-name="{{ hotel.name }}">
+                        
+                        <div class="hotel-img-wrap">
+                            <img src="{{ hotel.image }}" alt="{{ hotel.name }}" class="hotel-img" loading="lazy">
+                            <span class="hotel-badge-top">
+                                {% if forloop.first %}<i class="fas fa-trophy" style="color: #f59e0b; margin-right: 4px;"></i>#1 Recommended{% else %}Verified Property{% endif %}
+                            </span>
+                            <div class="hotel-rating-pill">
+                                <i class="fas fa-star"></i>
+                                <span>{{ hotel.rating }}</span>
+                            </div>
+                        </div>
+
+                        <div class="hotel-body">
+                            <h2 class="hotel-name">{{ hotel.name }}</h2>
+                            <div class="hotel-address">
+                                <i class="fas fa-map-pin" style="color: var(--green-accent);"></i>
+                                <span>{{ hotel.address }}</span>
+                            </div>
+
+                            <!-- Dynamic Room Size Badge for This Hotel -->
+                            <div class="card-room-config">
+                                <div class="card-room-head">
+                                    <span class="card-room-title-text">{{ hotel.room_title }}</span>
+                                    <span style="font-size: 0.68rem; color: #86efac;">Verified</span>
+                                </div>
+                                <div class="card-room-spec-text card-room-spec">
+                                    {{ hotel.room_badge }} • {{ hotel.room_sqft }}
+                                </div>
+                            </div>
+
+                            <p class="hotel-desc">{{ hotel.description }}</p>
+
+                            <!-- Dynamic Pricing Indicator -->
+                            {% if hotel.dynamic_pricing %}
+                                <div class="card-dp-indicator {% if hotel.dynamic_pricing.is_discounted %}card-dp-discount{% endif %}">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span><strong>Dynamic Rate:</strong> {{ hotel.dynamic_pricing.reason }}</span>
+                                </div>
+                            {% endif %}
+
+                            <div class="hotel-amenities-list">
+                                {% for am in hotel.amenities %}
+                                    <span class="amenity-chip">{{ am }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="hotel-footer">
+                            <div>
+                                <span class="rate-label">Nightly Rate</span>
+                                <div class="rate-amount">
+                                    Rs. <span class="card-live-price">{{ hotel.price }}</span>
+                                    <span>/ night</span>
+                                </div>
+                                <div class="rate-room-type card-rate-subtitle">{{ selected_room_config.label }}</div>
+                            </div>
+
+                            <a href="{% url 'forming' %}?hotel_name={{ hotel.name|urlencode }}&hotel_price={{ hotel.price }}&room_type={{ room_type }}&room_title={{ hotel.room_title|urlencode }}" 
+                               class="btn-reserve-hotel card-reserve-link">
+                                <span>Reserve</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Tiered Cancellation Policy Card -->
+        {% if cancellation_info %}
+            <section class="cancellation-card">
+                <div class="canc-head">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Omnichannel Tiered Cancellation Policy</span>
+                </div>
+                <p class="canc-desc">
+                    Guaranteed transparency on booking cancellations designed to balance traveler flexibility with confirmed hotel hold guarantees:
+                </p>
+
+                <div class="canc-grid">
+                    {% for tier in cancellation_info.tiers_table %}
+                        <div class="canc-tile">
+                            <span class="canc-tile-time">{{ tier.timeframe }}</span>
+                            <span class="canc-tile-refund">{{ tier.refund }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+    </main>
+
+    <!-- GoPlan Footer -->
+    <footer class="goplan-footer">
+        &copy; 2026 GoPlan. Live accommodation inventory with multi-criteria optimization.
+    </footer>
+
+    <!-- Interactive Room Size Pricing Engine (Instant Client-Side + Form Sync) -->
+    <script>
+        const ROOM_TITLES = {
+            '1_bed': {
+                label: '1 Bed Room',
+                title: '1 Bed Room (Standard / Deluxe Double)',
+                spec: '1 King Bed • Up to 2 Guests • 320 sq ft',
+            },
+            '2_bed': {
+                label: '2 Bed Room',
+                title: '2 Bed Room (Executive Suite / 2 BHK)',
+                spec: '2 King Beds (2 Rooms) • Up to 4 Guests • 650 sq ft',
+            },
+            '3_bed': {
+                label: '3 Bed Room',
+                title: '3 Bed Room (Presidential Villa / 3 BHK)',
+                spec: '3 Bedrooms • Up to 6+ Guests • 1,150 sq ft',
+            }
+        };
+
+        function selectRoomType(roomType) {
+            if (!ROOM_TITLES[roomType]) return;
+
+            // 1. Update Room Tabs active styling
+            document.querySelectorAll('.room-tab-btn').forEach(btn => {
+                if (btn.getAttribute('data-room-type') === roomType) {
+                    btn.classList.add('is-active');
+                } else {
+                    btn.classList.remove('is-active');
+                }
             });
 
-            // Initialize date inputs with today and tomorrow
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
+            // 2. Update hidden form input
+            const input = document.getElementById('form-room-type-input');
+            if (input) input.value = roomType;
 
-            const dateInputs = document.querySelectorAll('input[type="date"]');
-            dateInputs[0].valueAsDate = today;
-            dateInputs[1].valueAsDate = tomorrow;
-        });
+            // 3. Update active room label indicator
+            const ind = document.getElementById('active-room-label-indicator');
+            if (ind) ind.textContent = 'Showing ' + ROOM_TITLES[roomType].label + ' Rates';
+
+            // 4. Update all hotel cards instantly
+            const hotelCards = document.querySelectorAll('.hotel-card');
+            hotelCards.forEach(card => {
+                const priceKey = roomType === '1_bed' ? 'price1bed' : (roomType === '2_bed' ? 'price2bed' : 'price3bed');
+                const price = card.dataset[priceKey] || card.dataset.price1bed;
+                const hotelName = card.dataset.hotelName || '';
+
+                // Update price display
+                const priceEl = card.querySelector('.card-live-price');
+                if (priceEl) priceEl.textContent = price;
+
+                // Update room subtitles
+                const roomTitleEl = card.querySelector('.card-room-title-text');
+                if (roomTitleEl) roomTitleEl.textContent = ROOM_TITLES[roomType].title;
+
+                const roomSpecEl = card.querySelector('.card-room-spec-text');
+                if (roomSpecEl) roomSpecEl.textContent = ROOM_TITLES[roomType].spec;
+
+                const rateSubtitleEl = card.querySelector('.card-rate-subtitle');
+                if (rateSubtitleEl) rateSubtitleEl.textContent = ROOM_TITLES[roomType].label;
+
+                // Update reserve link with updated price & room type
+                const reserveLink = card.querySelector('.card-reserve-link');
+                if (reserveLink) {
+                    const url = "{% url 'forming' %}?hotel_name=" + encodeURIComponent(hotelName) +
+                                "&hotel_price=" + encodeURIComponent(price) +
+                                "&room_type=" + encodeURIComponent(roomType) +
+                                "&room_title=" + encodeURIComponent(ROOM_TITLES[roomType].title);
+                    reserveLink.setAttribute('href', url);
+                }
+            });
+
+            // 5. Update browser URL without reloading so bookmarks & refreshes preserve the room size
+            if (window.history && window.history.replaceState) {
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('room_type', roomType);
+                window.history.replaceState(null, '', currentUrl.toString());
+            }
+        }
     </script>
 </body>
 </html>

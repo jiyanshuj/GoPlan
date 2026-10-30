@@ -3,125 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Success</title>
+    <title>GoPlan - Booking Confirmed & Boarding Pass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --bg-dark: #07090e;
+            --card-glass: rgba(16, 22, 36, 0.78);
+            --card-glass-sub: rgba(10, 14, 25, 0.65);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --accent-green: #10b981;
+            --accent-green-bright: #34d399;
+            --accent-cyan: #38bdf8;
+            --accent-purple: #c084fc;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(30, 58, 138, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
+                linear-gradient(180deg, #07090e 0%, #0c1018 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            padding: 2.5rem 1rem;
         }
 
         .success-container {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 60px 40px;
-            max-width: 500px;
+            background: var(--card-glass);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--border-glass);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 26px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            padding: 2.5rem 2.25rem;
+            max-width: 580px;
+            width: 100%;
             text-align: center;
         }
 
-        .checkmark {
-            width: 80px;
-            height: 80px;
+        .header-badge {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            background-color: #10b981;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 3rem;
+            margin: 0 auto 1.25rem;
+            color: white;
+            font-size: 2.2rem;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.45);
         }
 
         h1 {
-            color: #1f2937;
-            font-size: 2rem;
-            margin-bottom: 15px;
+            color: #ffffff;
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.35rem;
         }
 
-        p {
-            color: #6b7280;
-            font-size: 1.125rem;
-            margin-bottom: 30px;
-            line-height: 1.6;
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 1.75rem;
         }
 
-        .details {
-            background-color: #f3f4f6;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
+        /* Mystery Reveal Card */
+        .mystery-reveal-box {
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.5), rgba(49, 46, 129, 0.5));
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            box-shadow: 0 8px 24px rgba(76, 29, 149, 0.3);
+        }
+
+        .mystery-reveal-title {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #fbbf24;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .revealed-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .mystery-savings {
+            font-size: 0.85rem;
+            color: var(--accent-green-bright);
+            font-weight: 600;
+        }
+
+        /* Boarding Pass Ticket */
+        .ticket-card {
+            background: var(--card-glass-sub);
+            border: 1px solid var(--border-glass);
+            border-top: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 18px;
+            padding: 1.35rem 1.45rem;
+            margin-bottom: 1.5rem;
             text-align: left;
         }
 
-        .detail-row {
+        .ticket-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.9rem;
         }
 
-        .detail-row:last-child {
+        .ticket-row:last-child {
             border-bottom: none;
+            padding-top: 0.85rem;
+            font-size: 1.05rem;
         }
 
-        .detail-label {
-            color: #6b7280;
-            font-weight: 500;
+        .ticket-label { color: var(--text-muted); font-weight: 600; font-size: 0.85rem; }
+        .ticket-value { color: #ffffff; font-weight: 700; }
+        .highlight-value { color: var(--accent-green-bright); font-weight: 900; }
+
+        /* QR Code Container */
+        .qr-section {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 1.15rem;
+            margin: 1.25rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 1.15rem;
         }
 
-        .detail-value {
-            color: #1f2937;
-            font-weight: 600;
+        .qr-box {
+            width: 145px;
+            height: 145px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 6px;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 12px 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .qr-info {
+            text-align: left;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* Cancellation Banner */
+        .cancellation-banner {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green-bright);
+            padding: 0.85rem 1.15rem;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .btn-plan-again {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.95rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             text-decoration: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: transform 0.2s ease;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
         }
 
-        .btn:hover {
+        .btn-plan-again:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(16, 185, 129, 0.55);
         }
     </style>
 </head>
 <body>
     <div class="success-container">
-        <div class="checkmark">✓</div>
-        <h1>Booking Confirmed!</h1>
-        <p>Your booking has been successfully completed. Your confirmation details have been sent to your email.</p>
-        
-        <div class="details">
-            <div class="detail-row">
-                <span class="detail-label">Booking Reference</span>
-                <span class="detail-value">#{{ booking_id }}</span>
+        <div class="header-badge"><i class="fas fa-check"></i></div>
+        <h1>Reservation Confirmed!</h1>
+        <p class="subtitle">Digital check-in ticket & boarding pass ready</p>
+
+        <!-- Mystery Deal Reveal Box (if user booked the opaque deal) -->
+        {% if is_mystery %}
+            <div class="mystery-reveal-box">
+                <div class="mystery-reveal-title"><i class="fas fa-trophy" style="color: #fbbf24; margin-right: 6px;"></i>Secret Hotel Deal Unlocked!</div>
+                <div class="revealed-name">{{ revealed_name }}</div>
+                <div class="mystery-savings">
+                    <i class="fas fa-check-circle" style="color: #34d399; margin-right: 4px;"></i>You successfully saved Rs. {{ mystery_savings }} through Opaque Balancing Policy!
+                </div>
             </div>
-            <div class="detail-row">
-                <span class="detail-label">Guest Name</span>
-                <span class="detail-value">{{ guest_name }}</span>
+        {% endif %}
+
+        <!-- Boarding Pass Details -->
+        <div class="ticket-card">
+            <div class="ticket-row">
+                <span class="ticket-label">Booking Reference</span>
+                <span class="ticket-value">#{{ booking_id }}</span>
             </div>
-            <div class="detail-row">
-                <span class="detail-label">Email</span>
-                <span class="detail-value">{{ guest_email }}</span>
+            <div class="ticket-row">
+                <span class="ticket-label">Lead Traveler</span>
+                <span class="ticket-value">{{ guest_name }}</span>
             </div>
-            <div class="detail-row">
-                <span class="detail-label">Amount Paid</span>
-                <span class="detail-value">Rs. 2888/-</span>
+            <div class="ticket-row">
+                <span class="ticket-label">Passengers</span>
+                <span class="ticket-value">{{ passengers }} Traveler{% if passengers > 1 %}s{% endif %}</span>
+            </div>
+            <div class="ticket-row">
+                <span class="ticket-label">Destination</span>
+                <span class="ticket-value">{{ destination }}</span>
+            </div>
+            <div class="ticket-row">
+                <span class="ticket-label">Property</span>
+                <span class="ticket-value">
+                    {% if is_mystery %}{{ revealed_name }}{% else %}{{ hotel_name }}{% endif %}
+                </span>
+            </div>
+            <div class="ticket-row">
+                <span class="ticket-label">Travel Date</span>
+                <span class="ticket-value">{{ checkin }}</span>
+            </div>
+            <div class="ticket-row">
+                <span class="ticket-label">Amount Paid</span>
+                <span class="ticket-value highlight-value">Rs. {{ total_price|floatformat:2 }}/-</span>
             </div>
         </div>
 
-        <a href="{% url 'trip_view' %}" class="btn">Book Another Trip</a>
+        <!-- Pure Python SVG QR Confirmation Code -->
+        <div class="qr-section">
+            <div class="qr-box">
+                {{ qr_svg|safe }}
+            </div>
+            <div class="qr-info">
+                <strong style="color: #ffffff; font-size: 0.88rem; display: block; margin-bottom: 0.25rem;">
+                    Digital Check-In QR Pass
+                </strong>
+                Scan upon hotel check-in and transit boarding. Verified with SHA-256 booking token.
+            </div>
+        </div>
+
+        <!-- Cancellation Policy Summary -->
+        {% if cancellation_info %}
+            <div class="cancellation-banner">
+                <strong><i class="fas fa-shield-alt"></i> Active Cancellation Status:</strong><br>
+                {{ cancellation_info.tier_name }} ({{ cancellation_info.refund_percentage }}% refund eligible: Rs. {{ cancellation_info.refund_amount|floatformat:0 }}).
+            </div>
+        {% endif %}
+
+        <a href="{% url 'trip_view' %}" class="btn-plan-again">
+            <i class="fas fa-compass"></i>
+            <span>Plan Another Trip</span>
+        </a>
     </div>
 </body>
 </html>

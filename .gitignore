@@ -1,0 +1,13 @@
+# Environment variables
+.env
+.env.local
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+
+# Static / Build
+staticfiles/
+.DS_Store

@@ -1,118 +1,1716 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success</title>
+    <title>GoPlan - Intelligent Travel Plan: {{ current_location }} to {{ destination }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* General body styles */
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            /* Midnight Dashboard Glass Tokens (charcoal + teal-blue glow) */
+            --bg-canvas: #020305;
+            --frame-bg: #05070a;
+
+            /* Primary Glass Panel */
+            --glass-bg: linear-gradient(150deg, rgba(150, 190, 220, 0.12) 0%, rgba(255, 255, 255, 0.025) 42%, rgba(255, 255, 255, 0.045) 100%), rgba(10, 14, 20, 0.62);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-highlight: rgba(255, 255, 255, 0.20);
+            --glass-shadow: 0 18px 44px 0 rgba(0, 0, 0, 0.50), inset 0 1px 1px 0 rgba(255, 255, 255, 0.16);
+
+            /* Nested Sub-Glass Tile */
+            --subglass-bg: linear-gradient(150deg, rgba(150, 190, 220, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(6, 9, 14, 0.60);
+            --subglass-border: rgba(255, 255, 255, 0.07);
+            --subglass-border-highlight: rgba(255, 255, 255, 0.16);
+            --subglass-shadow: 0 8px 22px rgba(0, 0, 0, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+            --subglass-hover: linear-gradient(150deg, rgba(150, 190, 220, 0.17) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(16, 22, 32, 0.72);
+
+            /* Accents */
+            --cyan: #38bdf8;
+            --cyan-glow: rgba(56, 189, 248, 0.4);
+            --emerald: #10b981;
+            --emerald-bright: #34d399;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
+            --purple: #c084fc;
+            --purple-glow: rgba(192, 132, 252, 0.3);
+            --amber: #fbbf24;
+
+            /* Text */
+            --text-pure: #ffffff;
+            --text-sub: #cbd5e1;
+            --text-muted: #9aa7bb;
+            --text-dim: #7d8aa0;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background: url('https://ec.europa.eu/eurostat/documents/29567/19147678/phaisarnwong2517_AdobeStock_336596257_RV.jpg/e57cc2be-a232-d68c-d5c2-20a1f9a83e12?t=1716366406127') no-repeat center center fixed; /* Add your image URL here */
-            background-size: cover;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            background-image: none;
+            color: var(--text-pure);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ======================================================== */
+        /* AUTHENTIC GLASSMORPHISM: Ambient Floating Light Spheres  */
+        /* (Gives the frosted glass layers deep optical refraction) */
+        /* ======================================================== */
+        .frame-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(90px);
+            opacity: 0.38;
+        }
+
+        .orb-1 { width: 460px; height: 460px; top: -90px; left: 6%;
+            background: radial-gradient(circle, #0ea5e9 0%, rgba(14, 116, 144, 0.35) 60%, transparent 100%);
+            animation: orbFloat1 20s ease-in-out infinite alternate; }
+
+        .orb-2 { width: 520px; height: 520px; top: 4%; right: -120px;
+            background: radial-gradient(circle, #2563eb 0%, rgba(30, 64, 175, 0.30) 60%, transparent 100%);
+            animation: orbFloat2 24s ease-in-out infinite alternate; }
+
+        .orb-3 { width: 520px; height: 520px; bottom: -140px; left: 30%;
+            background: radial-gradient(circle, #0d9488 0%, rgba(15, 118, 110, 0.28) 60%, transparent 100%);
+            animation: orbFloat3 26s ease-in-out infinite alternate; }
+
+        .orb-4 { width: 360px; height: 360px; top: 52%; left: -60px; opacity: 0.4;
+            background: radial-gradient(circle, #7c3aed 0%, rgba(91, 33, 182, 0.25) 60%, transparent 100%);
+            animation: orbFloat2 30s ease-in-out infinite alternate; }
+
+        @keyframes orbFloat1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(70px, 60px) scale(1.15); } }
+        @keyframes orbFloat2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-70px, 50px) scale(1.1); } }
+        @keyframes orbFloat3 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, -60px) scale(1.1); } }
+
+        /* ======================================================== */
+        /* APP FRAME + ICON RAIL (dashboard layout)                 */
+        /* ======================================================== */
+        .app-frame {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse 55% 35% at 15% 0%, rgba(56, 189, 248, 0.10) 0%, transparent 65%),
+                radial-gradient(ellipse 45% 35% at 90% 10%, rgba(99, 102, 241, 0.09) 0%, transparent 65%),
+                linear-gradient(180deg, #05070a 0%, #020305 100%);
+        }
+
+        .app-main {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+            max-width: none;
+            margin: 0 auto;
+            padding: 1.25rem 1.75rem 2.5rem;
+        }
+
+        /* Top Sticky Glass Navbar (restored) */
+        .top-navbar {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(6, 9, 14, 0.70);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.85rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-inner {
+            max-width: none;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-actions { display: flex; align-items: center; gap: 1.25rem; }
+
+        .nav-action-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-action-link:hover { color: #ffffff; text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
+
+        .brand-link { display: inline-flex; align-items: center; text-decoration: none; transition: transform 0.2s ease; }
+        .brand-link:hover { transform: scale(1.02); }
+        .brand-logo-img { height: 40px; width: auto; display: block; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.7)); }
+
+        .btn-nav-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.9) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
             color: #ffffff;
+            text-decoration: none;
+            padding: 0.55rem 1.2rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.55);
+        }
+
+        /* Main Container */
+        .page-container { position: relative; z-index: 1; }
+
+        /* ======================================================== */
+        /* GLASS BANNER: Route Overview                             */
+        /* ======================================================== */
+        .route-banner {
+            background: var(--glass-bg);
+            backdrop-filter: blur(26px) saturate(170%);
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border-highlight);
+            border-left: 1px solid var(--glass-border-highlight);
+            box-shadow: var(--glass-shadow);
+            border-radius: 24px;
+            padding: 1.2rem 1.6rem;
+            margin-bottom: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .route-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
+        }
+
+        .route-heading-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .route-tagline {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+            color: var(--emerald-bright);
+            font-weight: 800;
+            text-shadow: 0 0 16px rgba(52, 211, 153, 0.4);
+        }
+
+        .route-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .route-arrow {
+            color: var(--cyan);
+            font-size: 1.4rem;
+            filter: drop-shadow(0 0 8px var(--cyan-glow));
+        }
+
+        .route-stats-strip {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            background: var(--subglass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--subglass-border);
+            border-top: 1px solid var(--subglass-border-highlight);
+            box-shadow: var(--subglass-shadow);
+            padding: 0.6rem 1.15rem;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            min-width: 120px;
+            transition: all 0.2s ease;
+        }
+
+        .stat-pill:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .stat-pill .s-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 0.6px;
+            font-weight: 700;
+        }
+
+        .stat-pill .s-value {
+            font-size: 1.02rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-top: 0.15rem;
+        }
+
+        .stat-pill .s-value.highlight-green {
+            color: var(--emerald-bright);
+            text-shadow: 0 0 12px var(--emerald-glow);
+        }
+
+        .stat-pill .s-value.highlight-cyan {
+            color: var(--cyan);
+            text-shadow: 0 0 12px var(--cyan-glow);
+        }
+
+        /* Top Accommodations Action Strip */
+        .top-actions-strip {
+            margin-bottom: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(26px) saturate(170%);
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border-highlight);
+            border-left: 1px solid var(--glass-border-highlight);
+            padding: 1.15rem 1.75rem;
+            border-radius: 22px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .footer-left-info {
+            display: flex;
+            align-items: center;
+            gap: 0.95rem;
+        }
+
+        .btn-cta-hotels {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.95) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(52, 211, 153, 0.45);
+            border-top: 1px solid rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 14px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-cta-hotels:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 26px rgba(16, 185, 129, 0.55);
+            border-color: var(--emerald-bright);
+        }
+
+        .btn-cta-back {
+            background: var(--subglass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--subglass-border);
+            border-top: 1px solid var(--subglass-border-highlight);
+            color: var(--text-sub);
+            text-decoration: none;
+            padding: 0.8rem 1.45rem;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cta-back:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        /* Bento dashboard grid (reference layout) */
+        .plan-dashboard-grid {
+            display: grid;
+            grid-template-columns: 330px minmax(0, 1fr) 380px;
+            grid-template-areas:
+                "hero hl hl"
+                "fc   tr it"
+                "bg   bg bg";
+            gap: 0.9rem;
+            align-items: stretch;
+        }
+
+        .area-hero { grid-area: hero; display: flex; }
+        .area-hl   { grid-area: hl; }
+        .area-fc   { grid-area: fc; }
+        .area-tr   { grid-area: tr; }
+        .area-it   { grid-area: it; }
+        .area-bg   { grid-area: bg; }
+        .area-hero .weather-hero-card { flex: 1; margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* Base Glass Card */
+        .dash-card {
+            background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.13) 0%, transparent 55%), var(--glass-bg);
+            backdrop-filter: blur(26px) saturate(170%);
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border-highlight);
+            border-left: 1px solid var(--glass-border-highlight);
+            border-radius: 24px;
+            padding: 1.25rem;
+            margin-bottom: 0;
+            height: 100%;
+            box-shadow: var(--glass-shadow);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dash-card:hover {
+            border-color: rgba(255, 255, 255, 0.16);
+            box-shadow: 0 24px 56px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Highlights tiles sit in one row inside the wide panel */
+        .area-hl .weather-highlights-grid { grid-template-columns: repeat(4, 1fr); margin-bottom: 0; }
+        .area-hl .highlight-tile.full-width { grid-column: span 1; }
+        .area-hl .highlight-tile { min-height: 150px; }
+
+        /* Budget portfolios become a 3-up row */
+        .portfolios-vertical-stack { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
+
+        /* Scrollable itinerary like a widget */
+        .itinerary-scroll-box { max-height: 640px; overflow-y: auto; padding-right: 0.35rem; }
+        .itinerary-scroll-box::-webkit-scrollbar { width: 6px; }
+        .itinerary-scroll-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 999px; }
+
+        .col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .col-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            letter-spacing: -0.2px;
+        }
+
+        .col-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(12px);
+        }
+
+        .badge-weather {
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.15);
+        }
+
+        .badge-travel {
+            background: rgba(52, 211, 153, 0.12);
+            color: var(--emerald-bright);
+            border: 1px solid rgba(52, 211, 153, 0.35);
+            box-shadow: 0 0 14px rgba(52, 211, 153, 0.15);
+        }
+
+        .badge-itinerary {
+            background: rgba(192, 132, 252, 0.12);
+            color: var(--purple);
+            border: 1px solid rgba(192, 132, 252, 0.35);
+            box-shadow: 0 0 14px rgba(192, 132, 252, 0.15);
+        }
+
+        /* ======================================================== */
+        /* 1. LEFT COLUMN: Weather Presentation (Pinterest Faithful)*/
+        /* ======================================================== */
+        .weather-hero-card {
+            background: radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.25) 0%, transparent 60%),
+                        linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%),
+                        rgba(40, 24, 90, 0.30);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 22px;
+            padding: 1.45rem;
+            margin-bottom: 1.15rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .weather-hero-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.15rem;
+        }
+
+        .weather-hero-brand {
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            text-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .hero-weather-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.1rem;
+        }
+
+        .hero-temp-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-temp-val {
+            font-size: 3.4rem;
+            font-weight: 900;
+            line-height: 1;
+            color: #ffffff;
+            letter-spacing: -1.8px;
+            display: flex;
+            align-items: flex-start;
+            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-temp-unit {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-left: 3px;
+            margin-top: 4px;
+        }
+
+        .hero-condition-text {
+            font-size: 0.96rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-top: 0.45rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .hero-weather-illustration {
+            font-size: 3.8rem;
+            line-height: 1;
+            filter: drop-shadow(0 10px 20px rgba(56, 189, 248, 0.4));
+            animation: weatherFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes weatherFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .weather-hero-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--text-sub);
+            padding-top: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .weather-hero-loc {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .weather-hero-date {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+
+        /* Today's Highlights Modular Tiles (Faithfully modeled after Pinterest "Today's Highlight") */
+        .highlights-section-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .weather-highlights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.35rem;
+        }
+
+        .highlight-tile {
+            background: var(--subglass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--subglass-border);
+            border-top: 1px solid var(--subglass-border-highlight);
+            border-radius: 16px;
+            padding: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--subglass-shadow);
+            transition: all 0.2s ease;
+        }
+
+        .highlight-tile:hover {
+            background: var(--subglass-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .highlight-tile.full-width {
+            grid-column: span 2;
+        }
+
+        .h-title {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .h-val-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.35rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .h-val {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .h-unit {
+            font-size: 0.75rem;
+            color: var(--cyan);
+            font-weight: 700;
+        }
+
+        .h-sub {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
+
+        /* Mini SVG sparkline & gauge charts inspired by Pinterest mockup */
+        .h-sparkline {
+            width: 100%;
+            height: 28px;
+            margin-top: 0.4rem;
+        }
+
+        .h-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .h-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #38bdf8, #10b981);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        /* 7-Day Forecast List */
+        .forecast-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .forecast-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .forecast-row-card {
+            background: var(--subglass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--subglass-border);
+            border-top: 1px solid var(--subglass-border-highlight);
+            border-radius: 14px;
+            padding: 0.75rem 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--subglass-shadow);
+            transition: all 0.2s ease;
+        }
+
+        .forecast-row-card:hover {
+            border-color: rgba(255, 255, 255, 0.22);
+            background: var(--subglass-hover);
+            transform: translateX(2px);
+        }
+
+        .forecast-row-card.is-rainy {
+            border-color: rgba(239, 68, 68, 0.35);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(30, 18, 70, 0.35) 100%);
+        }
+
+        .forecast-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .forecast-icon {
+            font-size: 1.45rem;
+            line-height: 1;
+        }
+
+        .forecast-meta {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .forecast-date {
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .forecast-cond {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .forecast-right {
+            text-align: right;
+        }
+
+        .forecast-temp {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .forecast-rain-pill {
+            font-size: 0.66rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 0.15rem;
+            padding: 0.18rem 0.45rem;
+            border-radius: 6px;
+        }
+
+        .rain-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .rain-low {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        /* ======================================================== */
+        /* 2. MIDDLE COLUMN: Ranked Travel Options (Glassmorphic)   */
+        /* ======================================================== */
+        .transport-cards-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .transport-card {
+            background: var(--subglass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--subglass-border);
+            border-top: 1px solid var(--subglass-border-highlight);
+            border-radius: 20px;
+            padding: 1.35rem 1.45rem;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--subglass-shadow);
+        }
+
+        .transport-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.24);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Rank 1 highlight */
+        .transport-card.is-rank-1 {
+            border: 1px solid var(--emerald-bright);
+            border-top: 1px solid rgba(110, 231, 183, 0.5);
+            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
+                        linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%),
+                        rgba(30, 18, 70, 0.35);
+            box-shadow: 0 14px 38px rgba(16, 185, 129, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+        }
+
+        .transport-card.is-rank-1::before {
+            content: '⭐ RECOMMENDED BEST MATCH';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            padding: 0.3rem 0.9rem;
+            border-bottom-left-radius: 12px;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .t-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+        }
+
+        .t-mode-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .t-mode-icon {
+            font-size: 1.75rem;
+            line-height: 1;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+        }
+
+        .t-mode-name {
+            font-size: 1.22rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .t-rank-pill {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.28rem 0.75rem;
+            border-radius: 999px;
+            backdrop-filter: blur(12px);
+        }
+
+        .rank-badge-1 {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--emerald-bright);
+            border: 1px solid var(--emerald-bright);
+            box-shadow: 0 0 14px var(--emerald-glow);
+        }
+
+        .rank-badge-2 {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+            box-shadow: 0 0 14px var(--cyan-glow);
+        }
+
+        .rank-badge-3, .rank-badge-4 {
+            background: rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* 4 Metrics recessed glass grid */
+        .t-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.65rem;
+            background: rgba(20, 10, 50, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 0.95rem;
+            margin-bottom: 1.15rem;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+        }
+
+        .t-metric-item {
             text-align: center;
         }
 
-        /* Content container */
-        .container {
-            background-color: rgba(0, 0, 0, 0.7); /* Add a translucent background */
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 600px;
-            margin: 50px auto;
+        .t-metric-name {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
         }
 
-        /* Header styles */
-        h1 {
-            color: #FFD700;
+        .t-metric-val {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff;
         }
 
-        /* Button styles */
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .t-metric-sub {
+            font-size: 0.65rem;
+            color: var(--cyan);
+            display: block;
+            margin-top: 0.15rem;
+            font-weight: 600;
+        }
+
+        /* Match Score and Action Bar */
+        .t-action-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding-top: 0.25rem;
+        }
+
+        .t-match-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .t-match-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .t-match-bar-bg {
+            width: 80px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .t-match-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #38bdf8, #10b981);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .t-match-number {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .btn-book-ticket {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.6rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
         }
 
-        .btn:hover {
-            background-color: #45a049;
+        .btn-book-ticket:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.55);
+            border-color: var(--emerald-bright);
         }
 
-        /* Responsive text */
-        p {
-            font-size: 18px;
-            margin: 10px 0;
+        /* ======================================================== */
+        /* 3. RIGHT COLUMN: Itinerary & Budget (Glassmorphic)       */
+        /* ======================================================== */
+        .itinerary-scroll-box {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-bottom: 0.5rem;
         }
+
+        .day-box {
+            background: var(--subglass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--subglass-border);
+            border-top: 1px solid var(--subglass-border-highlight);
+            border-radius: 18px;
+            padding: 1.15rem;
+            box-shadow: var(--subglass-shadow);
+        }
+
+        .day-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.9rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .day-box-title {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .day-box-weather {
+            font-size: 0.74rem;
+            color: var(--cyan);
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .timeline-stops-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .timeline-stop {
+            background: rgba(20, 10, 50, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .timeline-stop:hover {
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(30, 18, 70, 0.40);
+        }
+
+        .timeline-stop.swapped-stop {
+            border-color: var(--cyan);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(30, 18, 70, 0.35) 100%);
+            box-shadow: 0 0 18px rgba(56, 189, 248, 0.18);
+        }
+
+        .stop-top-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+        }
+
+        .stop-place-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .stop-time-slot {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--emerald-bright);
+        }
+
+        .stop-desc-line {
+            font-size: 0.76rem;
+            color: var(--text-sub);
+            line-height: 1.45;
+            margin-bottom: 0.45rem;
+        }
+
+        .stop-tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            align-items: center;
+        }
+
+        .tag-indoor {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .tag-swapped {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--cyan);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .transit-cue {
+            margin-top: 0.5rem;
+            font-size: 0.72rem;
+            color: var(--purple);
+            background: rgba(168, 85, 247, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            padding: 0.28rem 0.6rem;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* Budget Optimizer Portfolios */
+        .portfolios-vertical-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.95rem;
+        }
+
+        .portfolio-summary-card {
+            background: var(--subglass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--subglass-border);
+            border-top: 1px solid var(--subglass-border-highlight);
+            border-radius: 16px;
+            padding: 1.05rem;
+            border-left: 4px solid var(--emerald);
+            box-shadow: var(--subglass-shadow);
+            transition: all 0.2s ease;
+        }
+
+        .portfolio-summary-card:hover {
+            border-color: rgba(255, 255, 255, 0.22);
+            transform: translateY(-2px);
+        }
+
+        .portfolio-summary-card.p-cheapest {
+            border-left-color: var(--emerald-bright);
+        }
+
+        .portfolio-summary-card.p-fastest {
+            border-left-color: var(--cyan);
+        }
+
+        .portfolio-summary-card.p-greenest {
+            border-left-color: #4ade80;
+        }
+
+        .portfolio-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.35rem;
+        }
+
+        .p-name {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .p-total-price {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--emerald-bright);
+            text-shadow: 0 0 10px var(--emerald-glow);
+        }
+
+        .p-subtitle {
+            font-size: 0.74rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .p-details-mini {
+            display: flex;
+            flex-direction: column;
+            gap: 0.22rem;
+            font-size: 0.74rem;
+            color: #cbd5e1;
+        }
+
+        .p-savings-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--emerald-bright);
+            margin-top: 0.45rem;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1320px) {
+            .plan-dashboard-grid { grid-template-columns: 300px minmax(0, 1fr) 340px; }
+            .area-hl .weather-highlights-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 1100px) {
+            .plan-dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "hero hero"
+                    "hl   hl"
+                    "tr   tr"
+                    "fc   it"
+                    "bg   bg";
+            }
+            .portfolios-vertical-stack { grid-template-columns: 1fr !important; }
+        }
+
+        @media (max-width: 820px) {
+            .app-main { padding: 0.75rem 0.75rem 2rem; }
+            .plan-dashboard-grid {
+                grid-template-columns: 1fr;
+                grid-template-areas: "hero" "hl" "tr" "fc" "it" "bg";
+            }
+            .route-banner { flex-direction: column; align-items: flex-start; }
+            .t-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .top-actions-strip { flex-direction: column; align-items: stretch; }
+            .btn-cta-hotels, .btn-cta-back { text-align: center; }
+            .area-hl .weather-highlights-grid { grid-template-columns: 1fr 1fr; }
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Trip Details</h1>
 
-        <p>Current Location: {{ current_location|default:"Not specified" }}</p>
-        <p>Destination: {{ destination|default:"Not specified" }}</p>
-        <p>Budget: Rs. {{ budget|default:"Not specified"|floatformat:2 }}</p>
-        {% if distance %}
-            <p>Distance: {{ distance|floatformat:2 }} km</p>
-        {% else %}
-            <p>Distance: Not calculated</p>
-        {% endif %}
+    <div class="app-frame">
 
-        {% if distance %}
-            {% if distance < 70 %}
-                <p>Recommended Transport: Bus</p>
-                <a href="https://www.makemytrip.com/bus-tickets/aictsl_campus-bus-stand.html" target="_blank" class="btn">Book Now</a>
-            {% elif distance < 1000 %}
-                <p>Recommended Transport: Train</p>
-                <a href="https://www.irctc.co.in/nget/train-search" target="_blank" class="btn">Book Now</a>
-            {% else %}
-                <p>Recommended Transport: Airplane</p>
-                <a href="https://www.goindigo.in/" target="_blank" class="btn">Book Now</a>
-            {% endif %}
-        {% else %}
-            <p style="color: #FF6B6B;">Unable to calculate distance. Please try again.</p>
-        {% endif %}
-        <a href="{% url 'booking' %}" class="btn" style="background-color: #2196F3; display: inline-block; margin-top: 15px;">Continue to Hotel Booking</a>
+        <!-- Top Sticky Glass Navbar -->
+        <header class="top-navbar">
+            <div class="nav-inner">
+                <a href="{% url 'trip_view' %}" class="brand-link" title="GoPlan Home">
+                    <img src="{% static 'images/logo.png' %}" alt="GoPlan Logo" class="brand-logo-img">
+                </a>
+
+                <div class="nav-actions">
+                    <a href="{% url 'trip_view' %}" class="nav-action-link">Home</a>
+                    <a href="{% url 'booking' %}" class="nav-action-link">Destinations</a>
+                    <a href="{% url 'booking' %}" class="btn-nav-primary">
+                        <span>🏨 Hotel Deals</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Optical glow orbs behind the glass (clipped to the frame) -->
+        <div class="frame-glow">
+            <div class="ambient-orb orb-1"></div>
+            <div class="ambient-orb orb-2"></div>
+            <div class="ambient-orb orb-3"></div>
+            <div class="ambient-orb orb-4"></div>
+        </div>
+
+        <!-- Main content -->
+        <div class="app-main">
+
+            <main class="page-container">
+
+            <!-- Route & Travel Overview Banner -->
+        <section class="route-banner">
+            <div class="route-heading-group">
+                <div class="route-tagline">
+                    <span>🌿</span>
+                    <span>Verified Multi-Criteria Sustainable Route</span>
+                </div>
+                <h1 class="route-title">
+                    <span>{{ current_location }}</span>
+                    <span class="route-arrow">→</span>
+                    <span>{{ destination }}</span>
+                </h1>
+            </div>
+
+            <div class="route-stats-strip">
+                <div class="stat-pill">
+                    <span class="s-label">Total Distance</span>
+                    <span class="s-value highlight-cyan">
+                        {% if distance %}{{ distance|floatformat:1 }} km{% else %}N/A{% endif %}
+                    </span>
+                </div>
+                <div class="stat-pill">
+                    <span class="s-label">Travelers</span>
+                    <span class="s-value">{{ people|default:1 }} Traveler{{ people|pluralize }}</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="s-label">MCDM Priority</span>
+                    <span class="s-value" style="color: var(--purple);">{{ why_panel.best_criterion_label }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Accommodations Action Strip -->
+        <div class="top-actions-strip">
+            <div class="footer-left-info">
+                <span style="font-size: 1.55rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));">🏨</span>
+                <div>
+                    <strong style="color: #ffffff; font-size: 0.98rem; letter-spacing: -0.01em;">Ready for Accommodations?</strong>
+                    <p style="font-size: 0.82rem; color: var(--text-sub); margin-top: 0.15rem;">Explore real hotels with custom room sizes (1 BHK, 2 Bed Room, 3 Bed Room) and curated deals in {{ destination }}.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <a href="{% url 'trip_view' %}" class="btn-cta-back">← Adjust Trip Parameters</a>
+                <a href="{% url 'booking' %}" class="btn-cta-hotels">Continue to Hotel Booking & Deals →</a>
+            </div>
+        </div>
+
+        <!-- Bento Dashboard -->
+            <div class="plan-dashboard-grid">
+
+                <!-- Weather hero -->
+                <div class="area-hero" id="sec-weather">
+                    <!-- Weather Hero Widget (Pure Dark Glass + 3D Illustration + Large Temp) -->
+                    <div class="weather-hero-card">
+                        <div class="weather-hero-top">
+                            <span class="weather-hero-brand">🌤️ Live Radar</span>
+                            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">STATION #404</span>
+                        </div>
+
+                        <div class="hero-weather-display">
+                            <div class="hero-temp-group">
+                                <div class="hero-temp-val">
+                                    <span>{% if itinerary.weather_forecast %}{{ itinerary.weather_forecast.0.max_temp }}{% else %}28{% endif %}</span>
+                                    <span class="hero-temp-unit">°C</span>
+                                </div>
+                                <div class="hero-condition-text">
+                                    {% if itinerary.weather_forecast %}
+                                        {{ itinerary.weather_forecast.0.condition }}
+                                    {% else %}
+                                        Clear Skies
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="hero-weather-illustration">
+                                {% if itinerary.weather_forecast %}{{ itinerary.weather_forecast.0.icon }}{% else %}⛅{% endif %}
+                            </div>
+                        </div>
+
+                        <div class="weather-hero-footer">
+                            <div class="weather-hero-loc">
+                                <span>📍</span>
+                                <span>{{ destination }}</span>
+                            </div>
+                            <div class="weather-hero-date">
+                                {% if itinerary.weather_forecast %}{{ itinerary.weather_forecast.0.date }}{% else %}Today{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Highlights -->
+                <section class="area-hl">
+                    <div class="dash-card">
+                        <div class="col-header">
+                            <div class="col-title">
+                                <span>⚡</span>
+                                <span>Today's Highlights</span>
+                            </div>
+                            <span class="col-badge badge-weather">Open-Meteo AI</span>
+                        </div>
+                        <div class="weather-highlights-grid">
+                        <!-- Highlight 1: Rain & Precipitation Risk with Dynamic Level Bar -->
+                        <div class="highlight-tile">
+                            <span class="h-title">
+                                <span>Rain Status</span>
+                                <span>🌧️</span>
+                            </span>
+                            <div class="h-val-row">
+                                <span class="h-val">{% if itinerary.weather_forecast %}{{ itinerary.weather_forecast.0.rain_prob }}{% else %}0{% endif %}</span>
+                                <span class="h-unit">% Risk</span>
+                            </div>
+                            <div class="h-bar-bg" style="margin-top: 0.35rem; margin-bottom: 0.45rem;">
+                                <div class="h-bar-fill" style="width: {% if itinerary.weather_forecast %}{{ itinerary.weather_forecast.0.rain_prob }}{% else %}0{% endif %}%; background: {% if itinerary.weather_forecast.0.rain_prob >= 50 %}linear-gradient(90deg, #38bdf8, #ef4444){% else %}linear-gradient(90deg, #10b981, #38bdf8){% endif %};"></div>
+                            </div>
+                            <span class="h-sub">
+                                {% if itinerary.weather_forecast.0.is_rainy or itinerary.weather_forecast.0.rain_prob >= 40 %}
+                                    Rain likely · Sheltered swaps active
+                                {% else %}
+                                    Dry conditions · Great for outdoors
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <!-- Highlight 2: Diurnal Temp Range with Dynamic Gauge -->
+                        <div class="highlight-tile">
+                            <span class="h-title">
+                                <span>Temp Spread</span>
+                                <span>🌡️</span>
+                            </span>
+                            <div class="h-val-row">
+                                <span class="h-val">{% if itinerary.weather_forecast %}+{{ itinerary.weather_forecast.0.max_temp }}°{% else %}+28°{% endif %}</span>
+                                <span class="h-unit">/{% if itinerary.weather_forecast %}+{{ itinerary.weather_forecast.0.min_temp }}°{% else %}+19°{% endif %}</span>
+                            </div>
+                            <div class="h-bar-bg">
+                                <div class="h-bar-fill" style="width: {% if itinerary.weather_forecast %}{% widthratio itinerary.weather_forecast.0.max_temp 45 100 %}{% else %}65{% endif %}%; background: linear-gradient(90deg, #38bdf8, #fbbf24);"></div>
+                            </div>
+                            <span class="h-sub" style="margin-top: 0.35rem; display: block;">
+                                {% if itinerary.weather_forecast.0.max_temp >= 35 %}
+                                    Hot daytime · Stay hydrated
+                                {% elif itinerary.weather_forecast.0.max_temp >= 28 %}
+                                    Warm daytime · Pleasant evenings
+                                {% elif itinerary.weather_forecast.0.max_temp >= 20 %}
+                                    Mild & comfortable weather
+                                {% else %}
+                                    Cool climate · Light jacket recommended
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <!-- Highlight 3: Climate Season Window -->
+                        <div class="highlight-tile full-width">
+                            <span class="h-title">
+                                <span>📅 Best Climate Window</span>
+                                <span style="color: var(--emerald-bright);">Optimal Season</span>
+                            </span>
+                            <div class="h-val-row">
+                                <span class="h-val" style="font-size: 1.05rem; color: var(--emerald-bright);">{{ itinerary.best_climate.best_months }}</span>
+                            </div>
+                            <span class="h-sub">{{ itinerary.best_climate.season }} ({{ itinerary.best_climate.temp_range }}) — {{ itinerary.best_climate.summary }}</span>
+                        </div>
+
+                        <!-- Highlight 4: Eco Intelligence -->
+                        <div class="highlight-tile full-width" style="border-left: 3px solid var(--emerald-bright);">
+                            <span class="h-title">
+                                <span>🌱 Eco-Routing Intelligence</span>
+                                <span style="color: var(--emerald-bright);">BWM Verified</span>
+                            </span>
+                            <div class="h-val-row">
+                                <span class="h-val" style="color: var(--emerald-bright);">Up to 78%</span>
+                                <span class="h-unit" style="color: #ffffff;">CO₂ Saved</span>
+                            </div>
+                            <span class="h-sub">Low-emission collective transit reduces passenger emissions versus solo highway travel.</span>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                <!-- 7-Day Forecast -->
+                <aside class="area-fc">
+                    <div class="dash-card">
+                    <!-- 7-Day Forecast List (Pinterest Reference Stack) -->
+                    <div class="forecast-title">
+                        <span>7-Day Forecast</span>
+                        <span style="font-size: 0.72rem; color: var(--cyan); font-weight: 700;">Live Feed</span>
+                    </div>
+                    <div class="forecast-stack">
+                        {% for f in itinerary.weather_forecast %}
+                            <div class="forecast-row-card {% if f.is_rainy %}is-rainy{% endif %}">
+                                <div class="forecast-left">
+                                    <span class="forecast-icon">{{ f.icon }}</span>
+                                    <div class="forecast-meta">
+                                        <span class="forecast-date">{{ f.date }}</span>
+                                        <span class="forecast-cond">
+                                            {{ f.condition }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="forecast-right">
+                                    <div class="forecast-temp">+{{ f.max_temp }}° / +{{ f.min_temp }}°</div>
+                                    <span class="forecast-rain-pill {% if f.is_rainy %}rain-high{% else %}rain-low{% endif %}">
+                                        Rain: {{ f.rain_prob }}%
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </aside>
+
+                <!-- Ranked Travel Options -->
+                <section class="area-tr" id="sec-travel">
+                    <div class="dash-card">
+                        <div class="col-header">
+                            <div class="col-title">
+                                <span>🏆</span>
+                                <span>Ranked Travel Options</span>
+                            </div>
+                            <span class="col-badge badge-travel">BWM + TOPSIS</span>
+                        </div>
+
+                    <!-- Stack of Transport Cards -->
+                    <div class="transport-cards-stack">
+                        {% for item in ranked_transports %}
+                            <div class="transport-card {% if item.rank == 1 %}is-rank-1{% endif %}">
+                                <div class="t-card-header">
+                                    <div class="t-mode-info">
+                                        <span class="t-mode-icon">{{ item.icon }}</span>
+                                        <div>
+                                            <div class="t-mode-name">{{ item.name }}</div>
+                                        </div>
+                                    </div>
+                                    <span class="t-rank-pill rank-badge-{{ item.rank }}">{{ item.badge }}</span>
+                                </div>
+
+                                <!-- 4 Recessed Metrics Grid -->
+                                <div class="t-metrics-grid">
+                                    <div class="t-metric-item">
+                                        <div class="t-metric-name">Ticket Fare</div>
+                                        <div class="t-metric-val">{{ item.display.cost }}</div>
+                                        <span class="t-metric-sub">{{ item.display.fare_subtitle }}</span>
+                                    </div>
+                                    <div class="t-metric-item">
+                                        <div class="t-metric-name">Duration</div>
+                                        <div class="t-metric-val">{{ item.display.time }}</div>
+                                    </div>
+                                    <div class="t-metric-item">
+                                        <div class="t-metric-name">Carbon (CO₂)</div>
+                                        <div class="t-metric-val">{{ item.display.co2 }}</div>
+                                    </div>
+                                    <div class="t-metric-item">
+                                        <div class="t-metric-name">Comfort</div>
+                                        <div class="t-metric-val">{{ item.display.comfort }}</div>
+                                    </div>
+                                </div>
+
+                                <!-- Match Score & Booking Action -->
+                                <div class="t-action-strip">
+                                    <div class="t-match-wrap">
+                                        <span class="t-match-label">Match:</span>
+                                        <div class="t-match-bar-bg" title="{{ item.scores.composite_pct }}%">
+                                            <div class="t-match-bar-fill" style="width: {{ item.scores.composite_pct }}%;"></div>
+                                        </div>
+                                        <span class="t-match-number">{{ item.scores.composite_pct }}%</span>
+                                    </div>
+
+                                    <a href="{{ item.booking_url }}" target="_blank" rel="noopener noreferrer" class="btn-book-ticket">
+                                        <span>{{ item.booking_label }}</span>
+                                        <span>→</span>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </section>
+
+                <!-- Itinerary -->
+                <aside class="area-it" id="sec-itinerary">
+                <!-- Day-Wise Dynamic Itinerary -->
+                <div class="dash-card">
+                    <div class="col-header">
+                        <div class="col-title">
+                            <span>🗺️</span>
+                            <span>Day-by-Day Itinerary</span>
+                        </div>
+                        <span class="col-badge badge-itinerary">Orienteering</span>
+                    </div>
+
+                    {% if itinerary.has_rainy_day %}
+                        <div style="font-size: 0.76rem; background: rgba(56, 189, 248, 0.14); border: 1px solid rgba(56, 189, 248, 0.35); color: var(--cyan); padding: 0.5rem 0.85rem; border-radius: 12px; margin-bottom: 1rem; font-weight: 700; box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);">
+                            🛡️ Weather-Robust Plan Active: Outdoor sights auto-swapped for sheltered cultural venues.
+                        </div>
+                    {% endif %}
+
+                    <div class="itinerary-scroll-box">
+                        {% for day in itinerary.itinerary_days %}
+                            <div class="day-box">
+                                <div class="day-box-header">
+                                    <span class="day-box-title">{{ day.title }}</span>
+                                    <span class="day-box-weather">
+                                        {{ day.weather.condition }} ({{ day.weather.max_temp }}°C)
+                                    </span>
+                                </div>
+
+                                <div class="timeline-stops-list">
+                                    {% for stop in day.stops %}
+                                        <div class="timeline-stop {% if stop.swapped_from %}swapped-stop{% endif %}">
+                                            <div class="stop-top-line">
+                                                <span class="stop-place-name">{{ stop.name }}</span>
+                                                <span class="stop-time-slot">{{ stop.time_slot }}</span>
+                                            </div>
+                                            <p class="stop-desc-line">{{ stop.description }}</p>
+
+                                            <div class="stop-tags-row">
+                                                <span class="tag-indoor">{{ stop.type_label }}</span>
+                                                <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 600;">₹{{ stop.cost }}</span>
+                                                {% if stop.swapped_from %}
+                                                    <span class="tag-swapped">Swapped from: {{ stop.swapped_from }}</span>
+                                                {% endif %}
+                                            </div>
+
+                                            {% if stop.transit_to_next %}
+                                                <div class="transit-cue">
+                                                    🚶 {{ stop.transit_to_next.text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                </aside>
+
+                <!-- Budget Optimizer -->
+                <aside class="area-bg" id="sec-budget">
+                <!-- Budget Optimizer (Knapsack Portfolios) -->
+                <div class="dash-card">
+                    <div class="col-header">
+                        <div class="col-title">
+                            <span>💼</span>
+                            <span>Budget Optimizer</span>
+                        </div>
+                        <span class="col-badge" style="background: rgba(16, 185, 129, 0.14); color: var(--emerald-bright); border: 1px solid rgba(16, 185, 129, 0.35); box-shadow: 0 0 14px rgba(16, 185, 129, 0.15);">Knapsack</span>
+                    </div>
+
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.95rem; line-height: 1.45;">
+                        Optimal package allocation calculated across transport, curated stays, and activities.
+                    </p>
+
+                    <div class="portfolios-vertical-stack">
+                        <!-- Cheapest Portfolio -->
+                        <div class="portfolio-summary-card p-cheapest">
+                            <div class="portfolio-title-row">
+                                <span class="p-name">💎 {{ portfolios.cheapest_portfolio.title }}</span>
+                                <span class="p-total-price">₹{{ portfolios.cheapest_portfolio.total_cost }}</span>
+                            </div>
+                            <div class="p-subtitle">{{ portfolios.cheapest_portfolio.desc }}</div>
+                            <div class="p-details-mini">
+                                <div><strong>Transport:</strong> {{ portfolios.cheapest_portfolio.transport_mode }}</div>
+                                <div><strong>Hotel:</strong> {{ portfolios.cheapest_portfolio.hotel_name }}</div>
+                                <div><strong>Activities:</strong> {{ portfolios.cheapest_portfolio.activity_plan }}</div>
+                            </div>
+                            <div class="p-savings-tag">
+                                Remaining Savings: ₹{{ portfolios.cheapest_portfolio.savings }}
+                            </div>
+                        </div>
+
+                        <!-- Fastest Portfolio -->
+                        <div class="portfolio-summary-card p-fastest">
+                            <div class="portfolio-title-row">
+                                <span class="p-name">⚡ {{ portfolios.fastest_portfolio.title }}</span>
+                                <span class="p-total-price" style="color: var(--cyan);">₹{{ portfolios.fastest_portfolio.total_cost }}</span>
+                            </div>
+                            <div class="p-subtitle">{{ portfolios.fastest_portfolio.desc }}</div>
+                            <div class="p-details-mini">
+                                <div><strong>Transport:</strong> {{ portfolios.fastest_portfolio.transport_mode }}</div>
+                                <div><strong>Hotel:</strong> {{ portfolios.fastest_portfolio.hotel_name }}</div>
+                                <div><strong>Travel Time:</strong> {{ portfolios.fastest_portfolio.total_time }}</div>
+                            </div>
+                            <div class="p-savings-tag" style="color: var(--cyan);">
+                                Remaining Savings: ₹{{ portfolios.fastest_portfolio.savings }}
+                            </div>
+                        </div>
+
+                        <!-- Greenest Portfolio -->
+                        <div class="portfolio-summary-card p-greenest">
+                            <div class="portfolio-title-row">
+                                <span class="p-name">🌱 {{ portfolios.greenest_portfolio.title }}</span>
+                                <span class="p-total-price" style="color: var(--emerald-bright);">₹{{ portfolios.greenest_portfolio.total_cost }}</span>
+                            </div>
+                            <div class="p-subtitle">{{ portfolios.greenest_portfolio.desc }}</div>
+                            <div class="p-details-mini">
+                                <div><strong>Transport:</strong> {{ portfolios.greenest_portfolio.transport_mode }}</div>
+                                <div><strong>Hotel:</strong> {{ portfolios.greenest_portfolio.hotel_name }}</div>
+                                <div><strong>Emissions:</strong> {{ portfolios.greenest_portfolio.co2 }}</div>
+                            </div>
+                            <div class="p-savings-tag">
+                                Remaining Savings: ₹{{ portfolios.greenest_portfolio.savings }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </aside>
+
+            </div>
+
+            </main>
+        </div>
     </div>
 
-    <script>
-        // Ensure page is rendered properly
-        console.log('Success page loaded');
-        var distanceValue = {{ distance|default:0 }};
-        console.log('Distance:', distanceValue);
-        
-        // Store in a safe variable
-        if (typeof distanceValue !== 'undefined' && distanceValue !== null) {
-            console.log('Distance is valid:', distanceValue);
-        } else {
-            console.log('Distance is null or undefined');
-        }
-        
-        // Optional: Auto-redirect based on distance if needed
-        // Uncomment below for auto-redirect functionality
-        /*
-        if (distanceValue < 70) {
-            // Redirect to bus booking
-            // window.location.href = 'https://www.makemytrip.com/bus-tickets/';
-        } else if (distanceValue < 1000) {
-            // Redirect to train booking
-            // window.location.href = 'https://www.irctc.co.in/';
-        } else {
-            // Redirect to flight booking
-            // window.location.href = 'https://www.goindigo.in/';
-        }
-        */
-    </script>
 </body>
 </html>

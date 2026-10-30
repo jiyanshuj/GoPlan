@@ -1,178 +1,389 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment QR Code</title>
+    <title>GoPlan - Secure UPI Payment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2563eb;
-            --success-color: #10b981;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
+            --bg-dark: #07090e;
+            --card-glass: rgba(16, 22, 36, 0.78);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --accent-green: #10b981;
+            --accent-cyan: #38bdf8;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(30, 58, 138, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 85% 35%, rgba(56, 189, 248, 0.14) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
+                linear-gradient(180deg, #07090e 0%, #0c1018 100%);
+            background-attachment: fixed;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .payment-container {
-            background-color: var(--card-bg);
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            padding: 2rem;
-            margin: 1rem;
-        }
-
-        .payment-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .payment-header h1 {
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .payment-amount {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--text-primary);
-            margin: 1rem 0;
-        }
-
-        .qr-container {
-            background-color: var(--bg-color);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin: 2rem 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .qr-code {
-            width: 200px;
-            height: 200px;
-            margin-bottom: 1rem;
-        }
-
-        .payment-info {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            line-height: 1.5;
-        }
-
-        .timer {
-            font-size: 1.25rem;
+            justify-content: center;
+            padding: 2rem 1rem;
             color: var(--text-primary);
-            font-weight: 600;
-            margin: 1rem 0;
         }
 
-        .status {
+        .payment-wrapper {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        /* Top Brand / Payee Strip (Matching Uploaded GPay Screenshot) */
+        .payee-profile-strip {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            font-weight: 500;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
         }
 
-        .status.pending {
-            color: var(--primary-color);
+
+        .payee-name-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
         }
 
-        .status.success {
-            color: var(--success-color);
+        /* Pure Dark Glass Container */
+        .payment-container {
+            background: var(--card-glass);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--border-glass);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 26px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            padding: 2rem 1.85rem;
+            text-align: center;
         }
 
-        .complete-btn {
-            display: none;
-            width: 100%;
-            padding: 1rem;
-            background-color: var(--success-color);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
+        /* Amount Badge */
+        .payment-amount-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 78, 59, 0.25) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.35);
+            border-radius: 18px;
+            padding: 0.95rem 1rem;
+            margin-bottom: 1.35rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .amount-sub-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .amount-main-val {
+            font-size: 2.1rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .amount-auto-pill {
+            font-size: 0.72rem;
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            margin-top: 0.25rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* White QR Card (Matching the GPay Screenshot Card) */
+        .gpay-qr-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 1.5rem 1.25rem 1.25rem;
+            margin: 0 auto 1.35rem;
+            max-width: 320px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .gpay-qr-card:hover {
+            transform: scale(1.01);
+        }
+
+        .upi-qr-image {
+            width: 240px;
+            height: 240px;
+            display: block;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .upi-id-footer-line {
+            margin-top: 0.95rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .btn-copy-upi {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 1.5rem;
-            transition: background-color 0.3s ease;
+            transition: all 0.15s ease;
         }
 
-        .complete-btn:hover {
-            background-color: #059669;
+        .btn-copy-upi:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        /* Scan Instruction */
+        .scan-instruction-text {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.65rem;
+        }
+
+        /* Supported UPI Apps Row */
+        .upi-apps-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.15rem;
+            flex-wrap: wrap;
+        }
+
+        .upi-app-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            padding: 0.25rem 0.6rem;
+            border-radius: 8px;
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        /* Direct UPI Intent Button (for Mobile Users) */
+        .btn-direct-upi {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(30, 58, 138, 0.35) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #e0f2fe;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-direct-upi:hover {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.3) 0%, rgba(30, 58, 138, 0.5) 100%);
+            border-color: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        /* Verification Status */
+        .status-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            padding: 0.65rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.15rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+        }
+
+        .status-box.pending {
+            color: var(--accent-cyan);
+        }
+
+        .status-box.success {
+            color: var(--accent-green);
+            border-color: rgba(16, 185, 129, 0.35);
+            background: rgba(16, 185, 129, 0.1);
         }
 
         .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--primary-color);
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--accent-cyan);
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 480px) {
-            .payment-container {
-                margin: 0.5rem;
-                padding: 1.5rem;
-            }
-            
-            .qr-code {
-                width: 180px;
-                height: 180px;
-            }
+        /* Complete Button */
+        .btn-confirm-payment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            width: 100%;
+            padding: 0.95rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-confirm-payment:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.55);
+        }
+
+        .cancel-back-link {
+            display: inline-block;
+            margin-top: 1.15rem;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .cancel-back-link:hover {
+            color: #ffffff;
+        }
+
+        .timer-badge {
+            font-weight: 700;
+            color: #fca5a5;
         }
     </style>
 </head>
 <body>
-    <div class="payment-container">
-        <div class="payment-header">
-            <h1>Complete Your Payment</h1>
-            <p>Scan the QR code below to proceed with the payment</p>
-            <div class="payment-amount">Rs.299.00</div>
+
+    <div class="payment-wrapper">
+
+        <!-- Payee Header -->
+        <div class="payee-profile-strip">
+            <div class="payee-name-title">{{ payee_name }}</div>
         </div>
 
-        <div class="qr-container">
-            <a href="https://ibb.co/RHT4y2g"><img src="https://i.ibb.co/RHT4y2g/Whats-App-Image-2024-12-15-at-8-35-15-AM.jpg" alt="Whats-App-Image-2024-12-15-at-8-35-15-AM" border="0" /></a>
-            <p class="payment-info">
-                Open your payment app and scan this code<br>
-                Time remaining: <span class="timer">15:00</span>
-            </p>
+        <div class="payment-container">
+
+            <!-- Amount Box with Auto-Fill Notice -->
+            <div class="payment-amount-box">
+                <span class="amount-sub-label">Amount Payable</span>
+                <div class="amount-main-val">₹{{ formatted_amount }}</div>
+                <div class="amount-auto-pill">
+                    <span><i class="fas fa-bolt" style="color: #38bdf8;"></i></span>
+                    <span>Exact amount auto-filled on scan</span>
+                </div>
+            </div>
+
+            <!-- White QR Card (Matching Uploaded Screenshot with GPay Logo & Verified UPI) -->
+            <div class="gpay-qr-card">
+                <img src="{{ upi_qr_base64 }}" alt="UPI QR Code - Jiyanshu Jain" class="upi-qr-image" />
+                <div class="upi-id-footer-line">
+                    <span>UPI ID: {{ upi_id }}</span>
+                    <button type="button" class="btn-copy-upi" onclick="copyUPI()">Copy</button>
+                </div>
+            </div>
+
+            <p class="scan-instruction-text">Scan to pay with any UPI app</p>
+
+            <!-- Supported Apps List -->
+            <div class="upi-apps-row">
+                <span class="upi-app-pill">Google Pay</span>
+                <span class="upi-app-pill">PhonePe</span>
+                <span class="upi-app-pill">Paytm</span>
+                <span class="upi-app-pill">BHIM UPI</span>
+                <span class="upi-app-pill">Cred</span>
+            </div>
+
+            <!-- Direct Mobile UPI Link -->
+            <a href="{{ upi_url }}" class="btn-direct-upi">
+                <i class="fas fa-mobile-screen"></i>
+                <span>Open UPI App to Pay ₹{{ formatted_amount }}</span>
+            </a>
+
+            <!-- Verification Status -->
+            <div class="status-box pending" id="status-box">
+                <div class="spinner"></div>
+                <span>Waiting for UPI transfer confirmation... (<span class="timer-badge" id="session-timer">15:00</span>)</span>
+            </div>
+
+            <form method="POST" action="{% url 'pay' %}">
+                {% csrf_token %}
+                <button type="submit" id="complete-btn" class="btn-confirm-payment">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Confirm & Generate Booking Pass</span>
+                </button>
+            </form>
+
+            <a href="{% url 'forming' %}" class="cancel-back-link">← Return to Guest Details</a>
         </div>
 
-        <div class="status pending">
-            <div class="spinner"></div>
-            Waiting for payment...
-        </div>
-
-        <button type="button" id="complete-btn" class="complete-btn" onclick="completeBooking()">Complete Booking</button>
     </div>
 
     <script>
-        // Timer functionality
+        function copyUPI() {
+            navigator.clipboard.writeText('{{ upi_id }}').then(() => {
+                alert('UPI ID ({{ upi_id }}) copied to clipboard!');
+            }).catch(() => {
+                prompt('Copy UPI ID:', '{{ upi_id }}');
+            });
+        }
+
+        // 15-minute countdown timer
         function startTimer(duration, display) {
             let timer = duration;
             const interval = setInterval(() => {
@@ -184,36 +395,26 @@
                 if (--timer < 0) {
                     clearInterval(interval);
                     display.textContent = 'Expired';
-                    document.querySelector('.status').innerHTML = 'Payment session expired';
+                    const status = document.getElementById('status-box');
+                    status.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-times-circle"></i> Session expired</span>';
                 }
             }, 1000);
         }
 
-        // Initialize when document is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            // Start 15-minute countdown
-            const fifteenMinutes = 60 * 15;
-            const display = document.querySelector('.timer');
-            startTimer(fifteenMinutes, display);
+            const display = document.getElementById('session-timer');
+            if (display) startTimer(60 * 15, display);
 
-            // Simulate payment status check
+            // Automatic verification simulation after 3.5s
             setTimeout(() => {
-                const status = document.querySelector('.status');
-                status.classList.remove('pending');
-                status.classList.add('success');
-                status.innerHTML = '<i class="fas fa-check-circle"></i> Payment completed';
-                
-                // Show complete button after payment
-                const completeBtn = document.getElementById('complete-btn');
-                if (completeBtn) {
-                    completeBtn.style.display = 'block';
+                const status = document.getElementById('status-box');
+                if (status) {
+                    status.classList.remove('pending');
+                    status.classList.add('success');
+                    status.innerHTML = '<i class="fas fa-check-circle"></i> UPI payment verified successfully!';
                 }
-            }, 5000); // Simulate after 5 seconds
+            }, 3500);
         });
-
-        function completeBooking() {
-            window.location.href = '{% url 'booking_success' %}';
-        }
     </script>
 </body>
 </html>
