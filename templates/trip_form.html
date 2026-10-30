@@ -777,7 +777,7 @@
         <header class="navbar">
             <div class="container nav-container">
                 <a href="{% url 'trip_view' %}" class="brand-logo" aria-label="GoPlan Home">
-                    <img src="{% static 'images/logo.png' %}" alt="GoPlan Logo" class="brand-logo-img" />
+                    <img src="{% static 'images/logo.png' %}" alt="GoPlan Logo" class="brand-logo-img" loading="eager" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 160 48\'><text x=\'0\' y=\'34\' fill=\'%2310b981\' font-size=\'26\' font-weight=\'900\' font-family=\'Plus Jakarta Sans, sans-serif\'>🌿 GO<tspan fill=\'white\'>Plan</tspan></text></svg>';" />
                 </a>
 
                 <nav>
