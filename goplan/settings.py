@@ -27,7 +27,7 @@ allowed_hosts_env = os.getenv('ALLOWED_HOSTS')
 if allowed_hosts_env:
     ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()]
 else:
-    ALLOWED_HOSTS = ["*", ".onrender.com", "localhost", "127.0.0.1"]
+    ALLOWED_HOSTS = ["*", ".onrender.com", ".vercel.app", "localhost", "127.0.0.1"]
 
 # Application definition
 
